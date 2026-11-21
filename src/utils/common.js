@@ -1,5 +1,5 @@
 import { $gettext } from "../i18n";
-import { getNice } from "../options";
+import { notify } from "vue3-nice-elements";
 
 export { isLocal } from "../services/storage.service";
 
@@ -25,12 +25,26 @@ export function arrayToMap(array, key = "id") {
   }, {});
 }
 
+// Notifications and toasts go through vue3-nice-elements' notify(). The app renders them with <NiceNotifications />
+// (notifications) and <NiceToast /> (toasts).
+
 export function notifySuccess(text, title = $gettext("Success"), icon = "icon-check-circle") {
-  getNice()?.notification(text, "success", title, icon);
+  return notify({ message: text, type: "success", title, icon });
 }
 
 export function notifyError(text, title = $gettext("Error"), icon = "icon-alert-triangle") {
-  getNice()?.notification(text, "danger", title, icon);
+  return notify({ message: text, type: "danger", title, icon });
+}
+
+/**
+ * Short message at the bottom of the page, e.g. "Saved" or "Link copied".
+ *
+ * @param {string} text
+ * @param {string} [type] "success", "danger", "warning" or "info"; none for a neutral toast
+ * @param {object} [options] e.g. { timeout: 8000 } (ms, 0 keeps it until dismissed)
+ */
+export function notifyToast(text, type, options) {
+  return notify.toast(text, type, options);
 }
 
 /** Saves a Blob (e.g. from RequestService.getBlob) as a file */

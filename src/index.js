@@ -19,9 +19,27 @@ export {
   isSessionInvalid,
   permissionsFromProfile,
 } from "./stores/auth.store";
+export { useOlaiiUiStore } from "./stores/ui.store";
+export { useOlaiiContextStore } from "./stores/context.store";
 
 // Router
 export { createOlaiiAuthGuard } from "./router/auth-guard";
+export { createOlaiiContextGuard } from "./router/context-guard";
+export { createOlaiiRoutes } from "./router/routes";
+
+// Components
+export { default as OlaiiAppLayout } from "./components/OlaiiAppLayout.vue";
+export { default as OlaiiSidebar } from "./components/OlaiiSidebar.vue";
+export { default as OlaiiAppSwitcher } from "./components/OlaiiAppSwitcher.vue";
+export { default as OlaiiContextSwitcher } from "./components/OlaiiContextSwitcher.vue";
+export { default as OlaiiUserMenu } from "./components/OlaiiUserMenu.vue";
+export { default as OlaiiLanguageSwitcher } from "./components/OlaiiLanguageSwitcher.vue";
+
+// Views
+export { default as OlaiiLoadingView } from "./views/OlaiiLoadingView.vue";
+export { default as OlaiiErrorView } from "./views/OlaiiErrorView.vue";
+export { default as OlaiiNotFoundView } from "./views/OlaiiNotFoundView.vue";
+export { default as OlaiiNoOrganizationsView } from "./views/OlaiiNoOrganizationsView.vue";
 
 // i18n
 export { getSavedLanguage, setLanguage } from "./language";
@@ -34,6 +52,7 @@ export {
   arrayToMap,
   notifySuccess,
   notifyError,
+  notifyToast,
   downloadBlob,
   downloadFile,
 } from "./utils/common";
@@ -61,6 +80,8 @@ export function createOlaiiCommon(options) {
     install(app) {
       setOptions(normalized, app);
       app.provide(OLAII_OPTIONS_KEY, normalized);
+      // Selects the app's brand colors in styles/variables.scss
+      document.documentElement.dataset.olaiiApp = normalized.appId;
 
       TokenService.readFromCookies();
       if (normalized.gettext) normalized.gettext.current = getSavedLanguage();

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ErrorService, { AppError } from "./error.service";
 import { install } from "../test/helpers";
+import { notifications } from "../test/setup";
 
 const response = (status, data) => ({ response: { status, data } });
 
@@ -43,16 +44,14 @@ describe("ErrorService", () => {
     expect(error.response.status).toBe(400);
   });
 
-  it("shows a nice notification", () => {
-    const app = install();
-    const notification = vi.fn();
-    app.config.globalProperties.$nice = { notification };
+  it("shows a notification", () => {
     ErrorService.showError(response(404, {}));
-    expect(notification).toHaveBeenCalledWith(
-      "Not found",
-      "danger",
-      "Error 404",
-      "icon-alert-triangle"
-    );
+    expect(notifications).toHaveLength(1);
+    expect(notifications[0]).toMatchObject({
+      message: "Not found",
+      type: "danger",
+      title: "Error 404",
+      icon: "icon-alert-triangle",
+    });
   });
 });

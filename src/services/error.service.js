@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { $pgettext } from "../i18n";
-import { getNice, peekOlaiiOptions } from "../options";
+import { notify } from "vue3-nice-elements";
+import { peekOlaiiOptions } from "../options";
 
 // The app's own codes, from the errorCodes option: a ($pgettext) => ({ code: message }) function or a plain object
 function appErrorCodes() {
@@ -90,14 +91,12 @@ const ErrorService = {
 
   showError(error) {
     const parsedError = ErrorService.getError(error);
-    const nice = getNice();
-    if (!nice) return parsedError;
-    nice.notification(
-      parsedError.message,
-      "danger",
-      $pgettext("error", "Error") + " " + parsedError.code,
-      "icon-alert-triangle"
-    );
+    notify({
+      message: parsedError.message,
+      type: "danger",
+      title: $pgettext("error", "Error") + " " + parsedError.code,
+      icon: "icon-alert-triangle",
+    });
     return parsedError;
   },
 

@@ -19,6 +19,7 @@
     "./sentry": {
       "import": "./dist/sentry.js"
     },
+    "./style.css": "./dist/olaii-common.css",
     "./styles/*": "./src/styles/*",
     "./package.json": "./package.json"
   },

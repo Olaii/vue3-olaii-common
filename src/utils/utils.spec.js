@@ -1,6 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 import { formatCurrency, formatDate, formatDateWithTime } from "./format";
-import { arrayToMap, downloadFile, notifySuccess, searchYesNo } from "./common";
+import {
+  arrayToMap,
+  downloadFile,
+  notifyError,
+  notifySuccess,
+  notifyToast,
+  searchYesNo,
+} from "./common";
+import { notifications } from "../test/setup";
 import { install } from "../test/helpers";
 
 describe("format", () => {
@@ -28,12 +36,37 @@ describe("common", () => {
     expect(arrayToMap([{ id: 1 }, { id: 2 }])).toEqual({ 1: { id: 1 }, 2: { id: 2 } });
   });
 
-  it("notifies through nice", () => {
-    const app = install();
-    const notification = vi.fn();
-    app.config.globalProperties.$nice = { notification };
+  it("shows notifications and toasts through nice-elements", () => {
+    install();
     notifySuccess("Saved");
-    expect(notification).toHaveBeenCalledWith("Saved", "success", "Success", "icon-check-circle");
+    notifyError("Not saved");
+    notifyToast("Link copied", "info", { timeout: 8000 });
+    expect(
+      notifications.map(({ message, type, title, variant, timeout }) => ({
+        message,
+        type,
+        title,
+        variant,
+        timeout,
+      }))
+    ).toEqual([
+      // Newest first, as nice-elements keeps them
+      { message: "Link copied", type: "info", title: undefined, variant: "toast", timeout: 8000 },
+      {
+        message: "Not saved",
+        type: "danger",
+        title: "Error",
+        variant: "notification",
+        timeout: 3000,
+      },
+      {
+        message: "Saved",
+        type: "success",
+        title: "Success",
+        variant: "notification",
+        timeout: 3000,
+      },
+    ]);
   });
 
   it("downloads data as a file", () => {

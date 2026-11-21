@@ -27,6 +27,8 @@ describe("createOlaiiCommon", () => {
       defaultLanguage: "sl",
       languageCookieKey: "olaii_guestlist_language",
     });
+    // Selects the app's brand colors in styles/variables.scss
+    expect(document.documentElement.dataset.olaiiApp).toBe("guestlist");
   });
 
   it("provides the options to components", () => {

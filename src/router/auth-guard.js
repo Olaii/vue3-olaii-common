@@ -23,8 +23,10 @@ import { getOlaiiOptions } from "../options";
  */
 export function createOlaiiAuthGuard({ errorRoute = "error", checkAccess } = {}) {
   return async (to) => {
+    // meta.title can be a function, so it is translated in the current language
     const { title } = getOlaiiOptions();
-    document.title = to.meta?.title ? `${to.meta.title} • ${title}` : title;
+    const pageTitle = typeof to.meta?.title == "function" ? to.meta.title() : to.meta?.title;
+    document.title = pageTitle ? `${pageTitle} • ${title}` : title;
 
     if (to.meta?.public) return true;
 
@@ -38,8 +40,8 @@ export function createOlaiiAuthGuard({ errorRoute = "error", checkAccess } = {})
       try {
         await authStore.getUserProfile();
       } catch (error) {
-        const parsed = ErrorService.showError(error);
-        return { name: errorRoute, query: { message: parsed.message } };
+        const { code, message } = ErrorService.showError(error);
+        return { name: errorRoute, query: { code, message } };
       }
     }
 

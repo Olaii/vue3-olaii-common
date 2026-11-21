@@ -13,6 +13,7 @@ const DEFAULTS = {
   languageCookieKey: null,
   errorCodes: null,
   onLogout: null,
+  context: null,
 };
 
 let currentOptions = null;
@@ -38,6 +39,15 @@ function withTrailingSlash(url) {
  * @param {string} [options.languageCookieKey] Cookie that keeps the language (default "olaii_<appId>_language")
  * @param {Function} [options.errorCodes] ($pgettext) => ({ code: message }), app-specific error messages
  * @param {Function} [options.onLogout] Called on logout, e.g. to clean app stores
+ * @param {object} [options.context] Organization/event selection, see useOlaiiContextStore:
+ * @param {Function} options.context.fetchOrganizations (search) => organizations the user can open
+ * @param {Function} options.context.fetchOrganization (organizationId) => organization
+ * @param {Function} [options.context.fetchEvents] (organizationId) => events, for apps with events
+ * @param {Function} [options.context.fetchEvent] (organizationId, eventId) => event
+ * @param {Function} [options.context.search] (search) => [{ type: "ORGANIZATION" | "EVENT", ... }] for the
+ *   switcher; without it the switcher lists organizations only
+ * @param {string} options.context.organizationRoute Route opened after selecting an organization
+ * @param {string} [options.context.eventRoute] Route opened after selecting an event
  */
 export function normalizeOptions(options = {}) {
   const missing = REQUIRED.filter((key) => !options[key]);

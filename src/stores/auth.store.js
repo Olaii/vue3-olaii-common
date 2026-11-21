@@ -4,7 +4,8 @@ import TokenService from "../services/token.service";
 import UserService from "../services/user.service";
 import { isLocal } from "../services/storage.service";
 import { $gettext, $pgettext } from "../i18n";
-import { getNice, getOlaiiOptions } from "../options";
+import { notify } from "vue3-nice-elements";
+import { getOlaiiOptions } from "../options";
 import { redirect } from "../navigation";
 
 /**
@@ -161,7 +162,7 @@ export const useOlaiiAuthStore = defineStore("olaii-auth", () => {
   }
 
   function logoutSuccess() {
-    getNice()?.toast($gettext("Logout successful"));
+    notify.toast($gettext("Logout successful"));
   }
 
   return {

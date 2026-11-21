@@ -1,4 +1,6 @@
 import { createApp } from "vue";
+import { createRouter, createMemoryHistory } from "vue-router";
+import { createGettext } from "vue3-gettext";
 import { createPinia, setActivePinia } from "pinia";
 import { createOlaiiCommon } from "../index";
 
@@ -42,4 +44,24 @@ export function adapter(handler) {
     }
     return response;
   };
+}
+
+// vue3-nice-elements components are registered by the app, so component tests stub them
+const NICE_COMPONENTS = [
+  "NiceAvatar",
+  "NiceButton",
+  "NiceConfirmModal",
+  "NiceDropdown",
+  "NiceIcon",
+  "NiceLoading",
+  "NiceNoData",
+  "NicePopup",
+  "NiceView",
+];
+
+/** Router with the given routes and mount options for components that use the router and $gettext */
+export function componentSetup(routes) {
+  const router = createRouter({ history: createMemoryHistory(), routes });
+  const stubs = Object.fromEntries(NICE_COMPONENTS.map((name) => [name, true]));
+  return { router, global: { plugins: [router, createGettext()], stubs } };
 }

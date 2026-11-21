@@ -6,20 +6,22 @@ All notable changes to this project are documented here. Versions follow
 ## Unreleased
 
 - Rewrite from scratch (see `PLAN.md`).
+- Published as `@olaii/vue3-olaii-common` to GitHub Packages (private): GitHub Actions checks every push and
+  publishes on version tags; MIT license.
 - Vite 8 library build (ES module), peer dependencies on vue, pinia, vue-router, vue3-gettext and
   vue3-nice-elements.
 - ESLint and Prettier configured with the same rules as the pass, vouchers and guestlist apps.
 - Vitest test setup and a demo app (`yarn dev`).
-- Bootstrap grid only (`vue3-olaii-common/styles/grid.scss`); the rest of Bootstrap is dropped.
+- Bootstrap grid only (`@olaii/vue3-olaii-common/styles/grid.scss`); the rest of Bootstrap is dropped.
 - `createOlaiiCommon(options)` plugin with `getOlaiiOptions()` / `useOlaiiOptions()`.
 - Core services ported from the apps: `TokenService`, `StorageService`, `RequestService`,
   `ErrorService`/`AppError`, `UserService`.
 - `useOlaiiAuthStore` Pinia store, `createOlaiiAuthGuard` router guard, language helpers,
-  formatters and common helpers, `vue3-olaii-common/sentry` entry.
+  formatters and common helpers, `@olaii/vue3-olaii-common/sentry` entry.
 - Shared UI: `useOlaiiUiStore` and `useOlaiiContextStore` Pinia stores, `OlaiiAppLayout`,
   `OlaiiSidebar`, `OlaiiAppSwitcher`, `OlaiiContextSwitcher`, `OlaiiUserMenu`,
   `OlaiiLanguageSwitcher`, the loading/error/404/no-organizations views, `createOlaiiRoutes` and
-  `createOlaiiContextGuard`. Component styles ship as `vue3-olaii-common/style.css`.
+  `createOlaiiContextGuard`. Component styles ship as `@olaii/vue3-olaii-common/style.css`.
 - Shared styles `styles/index.scss`: CSS variables with per-app brand colors and dark theme, the Inter
   font and page basics (`styles/variables.scss`, `styles/base.scss`), plus the grid.
 - `context.restore()` only restores a saved event for the organization it was saved with, and the

@@ -1,8 +1,11 @@
+# Checks every push and pull request; publishes to GitHub Packages (npm.pkg.github.com) on version tags (v0.1.0, ...).
+# Apps install @olaii/vue3-olaii-common with a GitHub token that can read packages (see README.md).
+
 name: CI
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
     tags: ["v*"]
   pull_request:
 
@@ -20,4 +23,27 @@ jobs:
       - run: yarn format:check
       - run: yarn test
       - run: yarn build
-  # Publishing on tags is added once the package registry is decided (see PLAN.md).
+
+  publish:
+    needs: check
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          # Writes an .npmrc for the @olaii scope on GitHub Packages, authenticated with NODE_AUTH_TOKEN
+          registry-url: https://npm.pkg.github.com
+          scope: "@olaii"
+      # The tag must match the version in package.json, e.g. v0.1.0 for 0.1.0
+      - run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+      - run: yarn install --frozen-lockfile
+      # prepublishOnly runs lint, format check, tests and build first
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

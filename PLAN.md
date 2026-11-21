@@ -33,8 +33,8 @@ Out of scope: `olaii-ticketing-vue` (Nuxt + TS, separate token cookies) and `ola
 - Vite library mode, JavaScript (like the apps).
 - ESLint flat config + Prettier with the apps' rules.
 - Vitest (jsdom) and a demo app (`yarn dev`) for trying things out.
-- CHANGELOG, semantic versioning, GitHub Actions CI (lint, format check, test, build).
-- Publishing job: waits on the registry decision (see below).
+- CHANGELOG, semantic versioning, CI (lint, format check, test, build).
+- Publishing: GitHub Actions publishes `@olaii/vue3-olaii-common` to GitHub Packages on version tags.
 
 ## Phase 1: core, no UI (done)
 
@@ -120,8 +120,13 @@ local copies.
 App-specific enums, sandbox views, domain API services; the unused parts of `olaii-web-common` (login screens,
 dialog/popup, theme service).
 
+## Decisions
+
+- **Registry:** GitHub Packages, private, under the `Olaii` GitHub organization. The package is
+  `@olaii/vue3-olaii-common`; apps install it with an `.npmrc` and a `read:packages` GitHub token (README
+  "Installation"), GitHub Actions publishes on `v*` tags. To do: store the token in the apps' GitLab CI, then tag
+  `v0.1.0`.
+
 ## Open decisions
 
-- **Registry:** public npm (like `olaii-web-common`), GitHub Packages, or installing from git tags. `package.json`
-  stays `"private": true` until this is decided.
 - **Apps to Vite:** moving the apps from vue-cli to Vite is a separate, later step; the library doesn't require it.

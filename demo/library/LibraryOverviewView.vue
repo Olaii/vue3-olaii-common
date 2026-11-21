@@ -1,8 +1,9 @@
 <template>
   <NiceView title="Overview" icon="icon-package">
     <p class="intro">
-      Everything vue3-olaii-common offers: {{ total }} exports from <code>vue3-olaii-common</code>,
-      plus the separate Sentry and style imports. See README.md for how apps use them.
+      Everything vue3-olaii-common offers: {{ total }} exports from
+      <code>@olaii/vue3-olaii-common</code>, plus the separate Sentry and style imports. See
+      README.md for how apps use them.
     </p>
 
     <NiceInput

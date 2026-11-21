@@ -1,4 +1,4 @@
-// Separate entry (vue3-olaii-common/sentry), so apps without @sentry/vue can use the rest of the library.
+// Separate entry (@olaii/vue3-olaii-common/sentry), so apps without @sentry/vue can use the rest of the library.
 /* eslint-disable no-console */
 import * as Sentry from "@sentry/vue";
 

@@ -1,15 +1,31 @@
 {
-  "name": "vue3-olaii-common",
-  "version": "1.0.0-alpha.0",
+  "name": "@olaii/vue3-olaii-common",
+  "version": "0.1.0",
   "description": "Shared services, stores and components for the Olaii Vue 3 admin apps",
-  "author": "Olaii",
-  "private": true,
+  "keywords": [
+    "vue",
+    "vue3",
+    "olaii",
+    "pinia",
+    "components"
+  ],
+  "homepage": "https://github.com/Olaii/vue3-olaii-common#readme",
+  "bugs": {
+    "url": "https://github.com/Olaii/vue3-olaii-common/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Olaii/vue3-olaii-common.git"
+  },
+  "license": "MIT",
+  "author": "Olaii d.o.o.",
   "type": "module",
   "files": [
     "dist",
     "src",
     "!src/**/*.spec.js",
-    "!src/test"
+    "!src/test",
+    "CHANGELOG.md"
   ],
   "module": "./dist/olaii-common.js",
   "exports": {
@@ -30,6 +46,9 @@
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -38,7 +57,9 @@
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepublishOnly": "yarn check-publish && yarn lint:check && yarn format:check && yarn test && yarn build",
+    "check-publish": "node -e \"if (!process.env.GITHUB_ACTIONS) { console.error('Publish from GitHub Actions: push a v<version> tag (see README Releasing)'); process.exit(1); }\""
   },
   "dependencies": {
     "axios": "^1.5.0",

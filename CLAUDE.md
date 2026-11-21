@@ -16,6 +16,9 @@ yarn build        # dist/olaii-common.js, dist/sentry.js
 
 Before finishing a change, run `yarn lint:check`, `yarn format:check`, `yarn test` and `yarn build`.
 
+The package is `@olaii/vue3-olaii-common` on GitHub Packages (private). Releases: bump `package.json`, tag
+`v<version>`, push the tag; `.github/workflows/ci.yml` publishes (README "Releasing"). Never publish by hand.
+
 ## Code rules
 
 - **Simple, readable, maintainable.** Prefer plain functions and objects over abstractions. No clever one-liners,

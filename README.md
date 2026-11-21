@@ -3,12 +3,50 @@
 Shared services, Pinia stores and components for the Olaii Vue 3 admin apps (pass, vouchers,
 guestlist). The Vue counterpart of `olaii-web-common`. See [PLAN.md](PLAN.md) for the roadmap.
 
+Published as `@olaii/vue3-olaii-common` to GitHub Packages (private npm registry of the `Olaii` GitHub
+organization).
+
+## Installation
+
+The package is private, so every install needs a GitHub token that can read packages. Add an `.npmrc` to the app
+(committed, the token comes from an environment variable):
+
+```
+@olaii:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
+```
+
+```bash
+yarn add @olaii/vue3-olaii-common
+```
+
+**On your machine:** create a GitHub personal access token (classic) with the `read:packages` scope, authorize it
+for the `Olaii` organization if it uses SSO, and export it, e.g. in `~/.zshrc`:
+
+```bash
+export NPM_TOKEN=ghp_...
+```
+
+**In the app's GitLab CI:** the apps run `yarn` inside `docker build`, so the token goes in as a build argument.
+Store a `read:packages` GitHub token as a masked CI/CD variable (e.g. `GITHUB_PACKAGES_TOKEN`) in the app project
+or the `olaii` GitLab group, then:
+
+```dockerfile
+ARG NPM_TOKEN
+COPY .npmrc package*.json yarn.lock ./
+RUN NPM_TOKEN=$NPM_TOKEN yarn
+```
+
+```yaml
+- docker build --build-arg NPM_TOKEN=$GITHUB_PACKAGES_TOKEN -t $CONTAINER_BUILD_IMAGE .
+```
+
 ## Usage
 
 ```js
 import { createPinia } from "pinia";
-import { createOlaiiCommon, createOlaiiAuthGuard } from "vue3-olaii-common";
-import { initSentry } from "vue3-olaii-common/sentry";
+import { createOlaiiCommon, createOlaiiAuthGuard } from "@olaii/vue3-olaii-common";
+import { initSentry } from "@olaii/vue3-olaii-common/sentry";
 
 app.use(createPinia());
 app.use(gettext);
@@ -50,7 +88,7 @@ initSentry(app, router, { dsn: process.env.VUE_APP_SENTRY });
 | `context`           | no       | Organization/event selection, see below                                               |
 
 Peer dependencies the app must install: `vue`, `pinia`, `vue-router`, `vue3-gettext`,
-`vue3-nice-elements`, and `@sentry/vue` when using `vue3-olaii-common/sentry`.
+`vue3-nice-elements`, and `@sentry/vue` when using `@olaii/vue3-olaii-common/sentry`.
 
 ### What's exported
 
@@ -67,7 +105,7 @@ Peer dependencies the app must install: `vue`, `pinia`, `vue-router`, `vue3-gett
 - **i18n:** `setLanguage`, `getSavedLanguage`
 - **Utils:** `formatCurrency`, `formatDate`, `formatDateWithTime`, `yesNo`, `searchYesNo`,
   `arrayToMap`, `notifySuccess`, `notifyError`, `notifyToast`, `copyToClipboard`, `downloadBlob`, `downloadFile`, `isLocal`
-- **Sentry** (`vue3-olaii-common/sentry`): `initSentry(app, router, { dsn })`
+- **Sentry** (`@olaii/vue3-olaii-common/sentry`): `initSentry(app, router, { dsn })`
 
 ### Layout, organization and event
 
@@ -92,7 +130,7 @@ createOlaiiCommon({
 Routes and layout:
 
 ```js
-import "vue3-olaii-common/style.css";
+import "@olaii/vue3-olaii-common/style.css";
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
@@ -126,7 +164,7 @@ The app's root component still renders vue3-nice-elements' `NiceToast`, `NiceNot
 ### Translations
 
 The library's strings are translated through the app's gettext instance. Add the library to the
-app's `gettext.config.js` sources: `"../node_modules/vue3-olaii-common/src/**/*.{js,vue}"`.
+app's `gettext.config.js` sources: `"../node_modules/@olaii/vue3-olaii-common/src/**/*.{js,vue}"`.
 
 ## Styles
 
@@ -135,7 +173,7 @@ page basics, a 12-column grid, shared components and helper classes. Import them
 the app's `main.scss`:
 
 ```scss
-@import "vue3-olaii-common/styles/index.scss";
+@import "@olaii/vue3-olaii-common/styles/index.scss";
 ```
 
 | File                    | Contents                                                                                                                                                                                       |
@@ -153,7 +191,21 @@ The brand colors follow `appId` (`createOlaiiCommon` sets `<html data-olaii-app=
 dark theme follows `useOlaiiUiStore` (`dark` class on `<body>`). The library's views use these
 classes, so apps need `styles/index.scss` for them to look right.
 
-The components' own styles are in `vue3-olaii-common/style.css`.
+The components' own styles are in `@olaii/vue3-olaii-common/style.css`.
+
+## Releasing
+
+1. Update the version in `package.json` (e.g. `0.2.0`) and move the CHANGELOG's "Unreleased" entries under it.
+2. Commit, then tag with the same version and push the tag:
+
+   ```bash
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+
+3. The `publish` job in `.github/workflows/ci.yml` checks that the tag matches `package.json`, runs lint, tests and
+   build (`prepublishOnly`), and publishes to GitHub Packages with the workflow's own `GITHUB_TOKEN`. Publishing by
+   hand is blocked.
 
 ## Development
 

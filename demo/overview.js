@@ -1,10 +1,14 @@
 // What the library offers, for the demo's overview page. Every export of src/index.js needs an entry here:
 // demo/overview.spec.js fails when an export is missing or an entry names something that isn't exported.
 // Styles and the Sentry entry are separate imports, so they are listed with `importFrom` and not checked.
+// Each group is a page of the demo (/:organizationId/library/<slug>), with its icon in the sidebar.
 
 export const groups = [
   {
     title: "Setup",
+    slug: "setup",
+    icon: "icon-settings",
+    summary: "The plugin and access to the app's options.",
     items: [
       {
         name: "createOlaiiCommon",
@@ -36,6 +40,9 @@ export const groups = [
   },
   {
     title: "Services",
+    slug: "services",
+    icon: "icon-server",
+    summary: "Tokens, API requests, cookies and errors.",
     items: [
       {
         name: "TokenService",
@@ -85,6 +92,9 @@ export const groups = [
   },
   {
     title: "Pinia stores",
+    slug: "stores",
+    icon: "icon-database",
+    summary: "User, UI preferences and the selected organization and event.",
     items: [
       {
         name: "useOlaiiAuthStore",
@@ -123,6 +133,9 @@ export const groups = [
   },
   {
     title: "Router",
+    slug: "router",
+    icon: "icon-git-branch",
+    summary: "Guards and the routes every app has.",
     items: [
       {
         name: "createOlaiiAuthGuard",
@@ -145,6 +158,9 @@ export const groups = [
   },
   {
     title: "Components",
+    slug: "components",
+    icon: "icon-layout",
+    summary: "Layout, sidebar, switchers and the user menu.",
     items: [
       {
         name: "OlaiiAppLayout",
@@ -182,6 +198,9 @@ export const groups = [
   },
   {
     title: "Views",
+    slug: "views",
+    icon: "icon-monitor",
+    summary: "Loading, error, no-organizations and 404 pages.",
     items: [
       {
         name: "OlaiiLoadingView",
@@ -210,6 +229,9 @@ export const groups = [
   },
   {
     title: "Language",
+    slug: "language",
+    icon: "icon-globe",
+    summary: "Switching and remembering the language.",
     items: [
       {
         name: "setLanguage",
@@ -225,6 +247,9 @@ export const groups = [
   },
   {
     title: "Helpers",
+    slug: "helpers",
+    icon: "icon-tool",
+    summary: "Formatting, notifications, clipboard and downloads.",
     items: [
       {
         name: "formatCurrency",
@@ -297,7 +322,10 @@ export const groups = [
     ],
   },
   {
-    title: "Other entries",
+    title: "Sentry and styles",
+    slug: "styles",
+    icon: "icon-droplet",
+    summary: "Sentry and the shared styles.",
     items: [
       {
         name: "initSentry",

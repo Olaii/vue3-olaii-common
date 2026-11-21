@@ -18,7 +18,10 @@ import {
 } from "@/index";
 import App from "./App.vue";
 import PageView from "./PageView.vue";
-import OverviewView from "./OverviewView.vue";
+import LibraryOverviewView from "./library/LibraryOverviewView.vue";
+import LibrarySectionView from "./library/LibrarySectionView.vue";
+import LibraryIconsView from "./library/LibraryIconsView.vue";
+import { groups } from "./overview";
 import { context, demoProfile } from "./data";
 
 const gettext = createGettext({
@@ -49,9 +52,37 @@ app.use(
 const loggedIn = TokenService.hasToken();
 if (!loggedIn) useOlaiiAuthStore().userProfile = demoProfile;
 
+// Library pages: the overview, a page per group of demo/overview.js, and the icons
+const libraryLinks = [
+  { name: "Overview", path: "overview", icon: "icon-package" },
+  ...groups.map((group) => ({
+    name: group.title,
+    path: `library-${group.slug}`,
+    icon: group.icon,
+  })),
+  { name: "Icons", path: "library-icons", icon: "icon-image" },
+];
+
+// One route per section, so the sidebar highlights only the open one
+const libraryRoutes = [
+  ...groups.map((group) => ({
+    path: `library/${group.slug}`,
+    name: `library-${group.slug}`,
+    component: LibrarySectionView,
+    props: { slug: group.slug },
+    meta: { title: () => group.title },
+  })),
+  {
+    path: "library/icons",
+    name: "library-icons",
+    component: LibraryIconsView,
+    meta: { title: () => "Icons" },
+  },
+];
+
 const links = [
   { type: "TITLE", name: "Library" },
-  { name: "Overview", path: "overview", icon: "icon-package" },
+  ...libraryLinks,
   // Event links only while an event is selected, like guestlist
   { type: "TITLE", name: "Event", hidden: () => !useOlaiiContextStore().event },
   {
@@ -84,9 +115,10 @@ const router = createRouter({
         {
           path: "overview",
           name: "overview",
-          component: OverviewView,
+          component: LibraryOverviewView,
           meta: { title: () => "Overview" },
         },
+        ...libraryRoutes,
         {
           path: ":eventId",
           name: "event",

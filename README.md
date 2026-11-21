@@ -157,8 +157,9 @@ The components' own styles are in `vue3-olaii-common/style.css`.
 
 ## Development
 
-The demo's **Overview** page (`/1/overview`, the demo's start page) lists every export
-with a short description and live examples. Its list is `demo/overview.js`.
+The demo's **Library** pages (start page `/1/overview`) list every export with a short description
+and live examples: an overview with a search, a page per section and the icons. The list is
+`demo/overview.js`.
 
 ```bash
 yarn install

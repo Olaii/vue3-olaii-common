@@ -25,4 +25,15 @@ describe("demo overview", () => {
       .map((item) => item.file);
     expect(missingFiles).toEqual([]);
   });
+
+  it("gives every group a page: a unique slug, an icon and a summary", () => {
+    const slugs = groups.map((group) => group.slug);
+    expect(new Set(slugs).size).toBe(groups.length);
+    for (const group of groups) {
+      expect(group.slug).toMatch(/^[a-z-]+$/);
+      expect(group.slug).not.toBe("icons"); // taken by the icons page
+      expect(group.icon).toMatch(/^icon-/);
+      expect(group.summary).toBeTruthy();
+    }
+  });
 });

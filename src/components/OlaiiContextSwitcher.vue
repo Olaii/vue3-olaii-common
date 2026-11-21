@@ -25,11 +25,13 @@
 
     <template #content>
       <div class="search">
-        <input
+        <!-- debounce: fires 500ms after the user stops typing -->
+        <NiceInput
           v-model="search"
-          type="text"
+          no-margin
+          icon="icon-search"
           :placeholder="$gettext('Search...')"
-          @input="onSearch"
+          @debounce="load"
         />
         <NiceLoading v-if="loading" />
       </div>
@@ -57,7 +59,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useOlaiiContextStore } from "../stores/context.store";
 import { useOlaiiUiStore } from "../stores/ui.store";
@@ -73,16 +75,9 @@ const popup = ref(null);
 const loading = ref(false);
 const search = ref("");
 const items = ref([]);
-let searchTimeout = null;
 
 function onToggle(isOpen) {
   if (isOpen) load();
-}
-
-// Waits until the user stops typing
-function onSearch() {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(load, 500);
 }
 
 // Apps with events search organizations and events together (context.search); others list organizations
@@ -132,8 +127,6 @@ async function select(item) {
     loading.value = false;
   }
 }
-
-onBeforeUnmount(() => clearTimeout(searchTimeout));
 </script>
 
 <style scoped lang="scss">
@@ -152,17 +145,10 @@ onBeforeUnmount(() => clearTimeout(searchTimeout));
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  padding: 0.5rem;
 
-  input {
+  .nice-input {
     flex-grow: 1;
-    padding: 0.8rem 1rem;
-    border: 0 none;
-    background: transparent;
-    color: inherit;
-
-    &:focus {
-      outline: none;
-    }
   }
 
   .nice-loading {

@@ -53,6 +53,7 @@ const NICE_COMPONENTS = [
   "NiceConfirmModal",
   "NiceDropdown",
   "NiceIcon",
+  "NiceInput",
   "NiceLoading",
   "NiceNoData",
   "NicePopup",

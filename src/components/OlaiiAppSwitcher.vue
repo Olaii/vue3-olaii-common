@@ -65,7 +65,7 @@ const currentApp = computed(() => {
   return {
     name: options.title,
     color: "var(--primary-color)",
-    colorDarker: "var(--primary-color)",
+    colorDarker: "var(--primary-color-darker)",
   };
 });
 

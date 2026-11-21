@@ -38,6 +38,12 @@ All notable changes to this project are documented here. Versions follow
 - `OlaiiSidebar` shows a link whose route needs a missing param (e.g. an event page while no event is
   selected) as disabled, instead of failing to render.
 - Demo: Overview page listing every component, service, store, helper and style with live examples.
+- Demo: the overview is split into Library pages: an overview with a search and section cards, a page
+  per section, and an icons page.
+- `OlaiiAppSwitcher`: apps outside the Olaii list get the darker brand shade in the logo cell, like
+  the Olaii apps. The demo's brand color is blue (`#3173ff`).
+- `OlaiiContextSwitcher` searches with `NiceInput` and its built-in debounce. The demo's searches,
+  icon tiles and "not described" warning use `NiceInput`, `NiceButton` and `NiceAlert`.
 - `styles/utilities.scss`: the helper classes the apps use (spacing, text alignment, display, flex,
   text helpers, `clickable`), and `.view-wrapper` in `styles/common.scss`.
 - The grid is generated with Sass instead of the copied Bootstrap CSS (same classes and values). The

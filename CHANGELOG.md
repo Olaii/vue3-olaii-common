@@ -5,6 +5,8 @@ All notable changes to this project are documented here. Versions follow
 
 ## Unreleased
 
+## **v1.0.0** - 21.11.2026
+
 - Rewrite from scratch (see `PLAN.md`).
 - Published as `@olaii/vue3-olaii-common` to GitHub Packages (private): GitHub Actions checks every push and
   publishes on version tags; MIT license.

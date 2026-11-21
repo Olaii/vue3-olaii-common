@@ -1,6 +1,6 @@
 {
   "name": "@olaii/vue3-olaii-common",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Shared services, stores and components for the Olaii Vue 3 admin apps",
   "keywords": [
     "vue",

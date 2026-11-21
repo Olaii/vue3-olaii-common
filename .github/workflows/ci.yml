@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint:check
+      - run: yarn format:check
+      - run: yarn test
+      - run: yarn build
+  # Publishing on tags is added once the package registry is decided (see PLAN.md).

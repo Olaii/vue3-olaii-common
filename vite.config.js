@@ -1,56 +1,56 @@
-import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from "@vitejs/plugin-vue-jsx"
-import fs from "fs";
+import fs from "node:fs";
+import { fileURLToPath, URL } from "node:url";
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import pkg from "./package.json" with { type: "json" };
 
-let key = null;
-let cert = null;
+// Peer dependencies are provided by the app, so they (and their subpaths) are never bundled
+const peers = Object.keys(pkg.peerDependencies);
+const external = (id) => peers.some((peer) => id === peer || id.startsWith(`${peer}/`));
 
-try {
-  key = fs.readFileSync("../test.olaii.com-key.pem");
-  cert = fs.readFileSync("../test.olaii.com.pem");
-} catch (e) {
-  console.error(e);
+// The demo runs on https://test.olaii.com:9100 when the shared dev certificates exist, so the
+// .olaii.com auth cookies are readable. Without them it falls back to http://localhost:9100.
+function devHttps() {
+  try {
+    return {
+      key: fs.readFileSync("../test.olaii.com-key.pem"),
+      cert: fs.readFileSync("../test.olaii.com.pem"),
+    };
+  } catch {
+    return null;
+  }
 }
+const https = devHttps();
 
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [vue(), vueJsx()],
-  base: "common",
-  server: {
-    port: 9100,
-    host: "test.olaii.com",
-    https: {
-      key,
-      cert,
-    },
-  },
+export default defineConfig(({ command }) => ({
+  plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
+  server:
+    command === "serve"
+      ? {
+          port: 9100,
+          host: https ? "test.olaii.com" : "localhost",
+          https: https || undefined,
+        }
+      : undefined,
   build: {
     lib: {
-      // Could also be a dictionary or array of multiple entry points
-      entry: 'src/lib.js',
-      name: 'Vue3OlaiiCommon',
-      fileName: (format) => `vue3-olaii-common.${format}.js`
+      entry: fileURLToPath(new URL("./src/index.js", import.meta.url)),
+      formats: ["es"],
+      fileName: () => "olaii-common.js",
+      cssFileName: "olaii-common",
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: ['vue', 'vue3-gettext', 'vue-router'],
-      output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          vue: 'Vue',
-          "vue-router": 'vueRouter',
-        },
-      },
+      external,
     },
-  }
-})
+    sourcemap: true,
+  },
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.spec.js"],
+  },
+}));

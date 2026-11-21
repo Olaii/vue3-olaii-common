@@ -63,6 +63,17 @@ Before finishing a change, run `yarn lint:check`, `yarn format:check`, `yarn tes
 
 ## Commits
 
+- Same style as the other Olaii projects (olaii-backoffice, pass, vouchers, guestlist): a subject line starting
+  with `- ` and a lowercase past-tense verb, no period, ticket at the end when there is one. Optional body: more
+  `- ` lines.
+
+  ```
+  - added shared layout, sidebar and context store - OLA-1234
+
+  - added ui and context pinia stores
+  - fixed sidebar active link
+  ```
+
 - No mention of Claude or AI in commit messages or PR descriptions: no `Co-Authored-By: Claude` trailer, no
   "Generated with Claude Code" line.
 

@@ -65,17 +65,38 @@ Changes from the apps' copies, to note when migrating:
 | Router guard (auth, profile, permission and module checks)                                                                       | guestlist `router/before-each.js` |
 | Sentry setup                                                                                                                     | identical in all three            |
 
-## Phase 2: shared UI
+## Phase 2: shared UI (done)
 
-- Layout shell (`AppView`) and Sidebar with slots for app links and a switcher.
-- App switcher, user menu (theme, language), language switcher, confirm modal.
-- Organization/event switcher, backed by a context store that each app gives its own fetch function.
-- Error, not found, loading and "no organizations" views.
-- The apps' `general.store.js` splits into a UI store (theme, sidebar) and the context store.
+- `OlaiiAppLayout` (sidebar + page) and `OlaiiSidebar` (links prop, `switcher`/`footer` slots).
+- `OlaiiAppSwitcher`, `OlaiiUserMenu` (theme, language, sign out), `OlaiiLanguageSwitcher`,
+  `OlaiiContextSwitcher` (organization/event search).
+- `OlaiiLoadingView`, `OlaiiErrorView`, `OlaiiNotFoundView`, `OlaiiNoOrganizationsView` and `createOlaiiRoutes()`.
+- The apps' `general.store.js` splits into `useOlaiiUiStore` (theme, sidebar, language) and `useOlaiiContextStore`
+  (organization, event, permissions, modules). App data (vouchers' transactions, registers, ...) stays in each app's
+  own store.
+- `createOlaiiContextGuard()` replaces the `beforeRouteEnter` in each app's `AppView.vue`; `context.restore()`
+  replaces the organization/event logic in `LoadingView.vue` (which also fixes vouchers loading the wrong id).
 
-## Phase 3: styles
+Changes to note when migrating:
 
-- Shared SCSS variables (`--olaii-*`, per-app brand colors matching `olaii-web-common`), `_view`, `_buttons`, `_spacing`.
+- `OlaiiNoOrganizationsView` drops the apps' "Back to safety" link to `/` (on the dev server that is the app itself,
+  so it looped back to this page); "Try again" re-runs the loading page instead.
+- No `ConfirmModal` in the library: vue3-nice-elements' `NiceConfirmModal` already does it (the apps' copy also has a
+  `Title` prop typo, so its title never shows).
+- `modules` is a map of enabled modules (`modules.PARTNERS`); guestlist's `undefined` for "no organization" goes away.
+- Selecting an organization/event navigates with the router (guestlist's behaviour), instead of vouchers' full page
+  load.
+- Changing the language reloads the page, like before, because apps build translated strings at import time.
+- The library components don't use Bootstrap utility classes; they need the CSS variables from Phase 3
+  (`--primary-color-bg`, `--card-bg`, `--hover-color`, ...), which the apps define today.
+
+## Phase 3: styles (started)
+
+Done: `styles/variables.scss` (guestlist's variables; brand colors per app through `data-olaii-app`; dark theme),
+`styles/base.scss` (Inter font, page basics, scrollbars), `styles/common.scss` (so far `.box`) and `styles/index.scss`
+that imports them with the grid.
+
+- Remaining shared helpers: `_view`, `_buttons`, `_spacing`, `_common`.
 - Bootstrap is removed. Only its grid is kept, in `src/styles/grid.scss` (container, row, col, order, offset;
   done in Phase 0), imported by apps as `vue3-olaii-common/styles/grid.scss`.
 - The apps still use Bootstrap's flex (`d-flex`, `justify-content-*`, `align-items-*`), spacing (`m*-*`, `p*-*`) and

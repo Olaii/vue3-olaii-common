@@ -45,6 +45,8 @@ Before finishing a change, run `yarn lint:check`, `yarn format:check`, `yarn tes
 - **Dependencies:** vue, pinia, vue-router, vue3-gettext, vue3-nice-elements (and optional @sentry/vue) are peer
   dependencies. Everything in `dependencies`/`peerDependencies` stays external in the build. Keep ranges wide enough
   for all three apps (e.g. pinia 2 and 3, vouchers is on pinia 2).
+- **Every export is described in `demo/overview.js`** (the demo's Overview page). `demo/overview.spec.js` fails when
+  an export has no entry or an entry names something that isn't exported.
 - **Public API** is what `src/index.js` (and `src/sentry.js`) export. Adding to it is fine; renaming or removing
   is a breaking change: note it in `CHANGELOG.md` and bump the major version.
 - **Domain code stays in the apps**: app-specific enums, permission lists, API services for app resources.
@@ -58,6 +60,11 @@ Before finishing a change, run `yarn lint:check`, `yarn format:check`, `yarn tes
   `adapter(handler)` fakes HTTP responses (`http.defaults.adapter` for the API, `axios.defaults.adapter` for the
   token refresh).
 - New services, stores and helpers get tests for their main behaviour and for the edge cases they exist to handle.
+
+## Commits
+
+- No mention of Claude or AI in commit messages or PR descriptions: no `Co-Authored-By: Claude` trailer, no
+  "Generated with Claude Code" line.
 
 ## Docs
 

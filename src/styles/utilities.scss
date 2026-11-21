@@ -1,0 +1,180 @@
+// Single-purpose helper classes the Olaii admin apps use in their templates. They replace the Bootstrap utilities
+// (spacing, text alignment, display) and the helpers from the apps' _common.scss / main.scss, with the same names
+// and values, so templates keep working after the apps drop their _bootstrap.scss.
+
+// Spacing scale, same as Bootstrap 4: 0, .25rem, .5rem, 1rem, 1.5rem, 3rem
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+);
+
+// Sides of .m*/.p* classes: "" = all (the shorthand), t/b/l/r = one side, x/y = both sides of an axis
+$sides: (
+  "": null,
+  "t": (top),
+  "r": (right),
+  "b": (bottom),
+  "l": (left),
+  "x": (
+    left,
+    right,
+  ),
+  "y": (
+    top,
+    bottom,
+  ),
+);
+
+// margin: 1rem, or margin-left + margin-right: 1rem, ...
+@mixin spacing($property, $directions, $value) {
+  @if $directions == null {
+    #{$property}: $value !important;
+  } @else {
+    @each $direction in $directions {
+      #{$property}-#{$direction}: $value !important;
+    }
+  }
+}
+
+// .m-3, .mt-2, .px-1, .p-0, ...
+@each $size, $length in $spacers {
+  @each $side, $directions in $sides {
+    .m#{$side}-#{$size} {
+      @include spacing(margin, $directions, $length);
+    }
+
+    .p#{$side}-#{$size} {
+      @include spacing(padding, $directions, $length);
+    }
+  }
+
+  .gap-#{$size} {
+    gap: $length;
+  }
+}
+
+// .m-auto, .mx-auto, .ml-auto, ...
+@each $side, $directions in $sides {
+  .m#{$side}-auto {
+    @include spacing(margin, $directions, auto);
+  }
+}
+
+.no-margin {
+  margin-bottom: 0 !important;
+}
+
+// Text
+.text-left {
+  text-align: left !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.text-small {
+  font-size: 0.8em;
+}
+
+.text-muted {
+  opacity: 0.8;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.lh-1 {
+  line-height: 1;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+
+.danger,
+.red {
+  color: var(--danger-color);
+}
+
+.success {
+  color: var(--success-color);
+}
+
+// Display
+.d-none {
+  display: none !important;
+}
+
+.d-inline {
+  display: inline !important;
+}
+
+.d-inline-block {
+  display: inline-block !important;
+}
+
+.d-block {
+  display: block !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.d-inline-flex {
+  display: inline-flex !important;
+}
+
+// Hidden on phones
+@media (max-width: 576px) {
+  .d-xs-none {
+    display: none !important;
+  }
+}
+
+// Flex and width
+.f-center {
+  align-items: center;
+}
+
+.grow,
+.flex-grow {
+  flex-grow: 1 !important;
+}
+
+.shrink {
+  flex-shrink: 0;
+}
+
+.w-0 {
+  width: 0%;
+}
+
+.w-full {
+  width: 100%;
+}
+
+// Pointer cursor and a small press effect
+.clickable {
+  cursor: pointer;
+
+  &:active,
+  &.active {
+    transform: scale(0.95);
+  }
+}

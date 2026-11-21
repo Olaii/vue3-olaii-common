@@ -38,6 +38,10 @@ All notable changes to this project are documented here. Versions follow
 - `OlaiiSidebar` shows a link whose route needs a missing param (e.g. an event page while no event is
   selected) as disabled, instead of failing to render.
 - Demo: Overview page listing every component, service, store, helper and style with live examples.
+- `styles/utilities.scss`: the helper classes the apps use (spacing, text alignment, display, flex,
+  text helpers, `clickable`), and `.view-wrapper` in `styles/common.scss`.
+- The grid is generated with Sass instead of the copied Bootstrap CSS (same classes and values). The
+  library has no Bootstrap code left.
 - `notifyToast(text, type, options)` for toasts. Notifications and toasts (including `notifySuccess`,
   `notifyError`, `ErrorService.showError` and the logout toast) now use vue3-nice-elements' `notify()`
   instead of the deprecated `$nice.notification()` / `$nice.toast()`.

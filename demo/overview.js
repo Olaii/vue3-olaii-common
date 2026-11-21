@@ -315,13 +315,21 @@ export const groups = [
         name: "styles/grid.scss",
         file: "src/styles/grid.scss",
         importFrom: "vue3-olaii-common/styles/grid.scss",
-        description: "Bootstrap 4 grid: container, row, col, order, offset.",
+        description:
+          "12-column grid: container, row, col-md-6, order, offset (same classes as Bootstrap 4).",
+      },
+      {
+        name: "styles/utilities.scss",
+        file: "src/styles/utilities.scss",
+        importFrom: "vue3-olaii-common/styles/utilities.scss",
+        description:
+          "Helper classes the apps use: spacing (mt-3, px-2, gap-1), text-right, d-flex, grow, clickable, ...",
       },
       {
         name: "styles/common.scss",
         file: "src/styles/common.scss",
         importFrom: "vue3-olaii-common/styles/common.scss",
-        description: "Shared helper classes such as .box.",
+        description: "Shared components: the .box card and the .view-wrapper page layout.",
       },
       {
         name: "style.css",

@@ -131,18 +131,27 @@ app's `gettext.config.js` sources: `"../node_modules/vue3-olaii-common/src/**/*.
 ## Styles
 
 The shared styles: CSS variables (with each app's brand colors and the dark theme), the Inter font,
-page basics and the Bootstrap 4 grid. Import them once at the top of the app's `main.scss`:
+page basics, a 12-column grid, shared components and helper classes. Import them once at the top of
+the app's `main.scss`:
 
 ```scss
 @import "vue3-olaii-common/styles/index.scss";
 ```
 
-The brand colors follow `appId` (`createOlaiiCommon` sets `<html data-olaii-app="...">`), and the
-dark theme follows `useOlaiiUiStore` (`dark` class on `<body>`). Single parts can be imported on their
-own: `styles/variables.scss`, `styles/base.scss`, `styles/grid.scss`, `styles/common.scss` (shared
-helper classes such as `.box`).
+| File                    | Contents                                                                                                                                                                                       |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `styles/variables.scss` | CSS variables, brand colors per `appId`, dark theme                                                                                                                                            |
+| `styles/base.scss`      | Inter font, page basics, scrollbars                                                                                                                                                            |
+| `styles/grid.scss`      | `container`, `row`, `col-*`, `order-*`, `offset-*` (same classes as the Bootstrap 4 grid)                                                                                                      |
+| `styles/common.scss`    | `.box` card, `.view-wrapper` page layout                                                                                                                                                       |
+| `styles/utilities.scss` | Spacing (`mt-3`, `px-2`, `m-auto`, `gap-1`), `text-left/right/center`, `text-bold`, `text-small`, `text-muted`, `no-wrap`, `d-flex`, `d-none`, `d-xs-none`, `grow`, `w-full`, `clickable`, ... |
 
-The library's views use these classes, so apps need `styles/index.scss` for them to look right.
+The library has no Bootstrap dependency: the grid and utilities keep Bootstrap 4's class names and
+values, so the apps' templates keep working when they drop their `_bootstrap.scss`.
+
+The brand colors follow `appId` (`createOlaiiCommon` sets `<html data-olaii-app="...">`), and the
+dark theme follows `useOlaiiUiStore` (`dark` class on `<body>`). The library's views use these
+classes, so apps need `styles/index.scss` for them to look right.
 
 The components' own styles are in `vue3-olaii-common/style.css`.
 

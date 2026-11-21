@@ -20,3 +20,35 @@
     justify-content: flex-end;
   }
 }
+
+// Page layout used by the apps' views (from their _view.scss): a header with icon and title, or a centered box
+.view-wrapper {
+  .view-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .view-header-icon {
+      height: 40px;
+      width: 40px;
+      margin-right: 1rem;
+    }
+
+    .view-title {
+      font-size: 2em;
+      font-weight: 600;
+    }
+  }
+
+  &.view-wrapper-middle {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .view-middle {
+      max-width: 95%;
+      width: 25rem;
+    }
+  }
+}

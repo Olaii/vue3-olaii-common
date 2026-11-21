@@ -90,18 +90,25 @@ Changes to note when migrating:
 - The library components don't use Bootstrap utility classes; they need the CSS variables from Phase 3
   (`--primary-color-bg`, `--card-bg`, `--hover-color`, ...), which the apps define today.
 
-## Phase 3: styles (started)
+## Phase 3: styles (mostly done)
 
-Done: `styles/variables.scss` (guestlist's variables; brand colors per app through `data-olaii-app`; dark theme),
-`styles/base.scss` (Inter font, page basics, scrollbars), `styles/common.scss` (so far `.box`) and `styles/index.scss`
-that imports them with the grid.
+Done:
 
-- Remaining shared helpers: `_view`, `_buttons`, `_spacing`, `_common`.
-- Bootstrap is removed. Only its grid is kept, in `src/styles/grid.scss` (container, row, col, order, offset;
-  done in Phase 0), imported by apps as `vue3-olaii-common/styles/grid.scss`.
-- The apps still use Bootstrap's flex (`d-flex`, `justify-content-*`, `align-items-*`), spacing (`m*-*`, `p*-*`) and
-  `text-left/right/center` classes. Before each app drops its `_bootstrap.scss` (Phase 4), those uses move to the
-  shared `_spacing.scss` helpers or to component styles.
+- `styles/variables.scss` (guestlist's variables; brand colors per app through `data-olaii-app`; backoffice's success
+  green; dark theme), `styles/base.scss` (Inter font, page basics, scrollbars).
+- `styles/grid.scss`: the 12-column grid, generated with Sass loops. Same 274 rules as the Bootstrap 4.2 grid copy
+  (checked rule by rule), without Bootstrap code.
+- `styles/utilities.scss`: the helper classes the apps use in their templates, measured across pass, vouchers and
+  guestlist: spacing (Bootstrap 4 scale), text alignment, display, flex/width helpers and the `_common.scss` text
+  helpers. Same values as before (the spacing, text and display classes match Bootstrap rule by rule).
+- `styles/common.scss`: `.box`, `.view-wrapper` (identical in all apps).
+- No Bootstrap left in the library. Each app drops its `_bootstrap.scss` when it imports `styles/index.scss`
+  (Phase 4).
+
+Still to do (diverged between the apps, so they need a shared design first):
+
+- `.badge` (guestlist/vouchers name color variants differently; pass has another shape), `.list-style` menu,
+  `.indicator`, `.nice-indicator`, `.error-box`, `_buttons.scss` (`.btn`, nearly identical), `_nice.scss` overrides.
 
 ## Phase 4: migrate the apps
 

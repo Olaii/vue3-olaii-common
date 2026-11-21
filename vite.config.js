@@ -9,8 +9,10 @@ const packages = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDepen
 const external = (id) => packages.some((name) => id === name || id.startsWith(`${name}/`));
 
 // The demo runs on https://test.olaii.com:9100 when the shared dev certificates exist, so the
-// .olaii.com auth cookies are readable. Without them it falls back to http://localhost:9100.
+// .olaii.com auth cookies are readable. Without them, or with DEMO_LOCALHOST=1, it runs on
+// http://localhost:9100 with a made-up user.
 function devHttps() {
+  if (process.env.DEMO_LOCALHOST) return null;
   try {
     return {
       key: fs.readFileSync("../test.olaii.com-key.pem"),
@@ -54,7 +56,7 @@ export default defineConfig(({ command }) => ({
   },
   test: {
     environment: "jsdom",
-    include: ["src/**/*.spec.js"],
+    include: ["src/**/*.spec.js", "demo/**/*.spec.js"],
     setupFiles: ["src/test/setup.js"],
   },
 }));

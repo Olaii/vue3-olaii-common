@@ -4,9 +4,9 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import pkg from "./package.json" with { type: "json" };
 
-// Peer dependencies are provided by the app, so they (and their subpaths) are never bundled
-const peers = Object.keys(pkg.peerDependencies);
-const external = (id) => peers.some((peer) => id === peer || id.startsWith(`${peer}/`));
+// Dependencies and peer dependencies are installed by the app, so they (and their subpaths) are never bundled
+const packages = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)];
+const external = (id) => packages.some((name) => id === name || id.startsWith(`${name}/`));
 
 // The demo runs on https://test.olaii.com:9100 when the shared dev certificates exist, so the
 // .olaii.com auth cookies are readable. Without them it falls back to http://localhost:9100.
@@ -39,9 +39,12 @@ export default defineConfig(({ command }) => ({
       : undefined,
   build: {
     lib: {
-      entry: fileURLToPath(new URL("./src/index.js", import.meta.url)),
+      entry: {
+        "olaii-common": fileURLToPath(new URL("./src/index.js", import.meta.url)),
+        sentry: fileURLToPath(new URL("./src/sentry.js", import.meta.url)),
+      },
       formats: ["es"],
-      fileName: () => "olaii-common.js",
+      fileName: (format, entryName) => `${entryName}.js`,
       cssFileName: "olaii-common",
     },
     rollupOptions: {
@@ -52,5 +55,6 @@ export default defineConfig(({ command }) => ({
   test: {
     environment: "jsdom",
     include: ["src/**/*.spec.js"],
+    setupFiles: ["src/test/setup.js"],
   },
 }));

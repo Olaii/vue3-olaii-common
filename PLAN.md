@@ -36,7 +36,21 @@ Out of scope: `olaii-ticketing-vue` (Nuxt + TS, separate token cookies) and `ola
 - CHANGELOG, semantic versioning, GitHub Actions CI (lint, format check, test, build).
 - Publishing job: waits on the registry decision (see below).
 
-## Phase 1: core, no UI
+## Phase 1: core, no UI (done)
+
+Changes from the apps' copies, to note when migrating:
+
+- Config comes from `createOlaiiCommon` options instead of `process.env`; the library uses its own axios instance.
+- The organization/event cookies are named per app: `olaii_<appId>_organization_id` / `_event_id` (same names
+  guestlist uses today).
+- App-specific error codes (`guest_limit_reached`, `code_already_exists`, `checkin_time_exceeded`) move to each app's
+  `errorCodes` option.
+- Auth store: `userProfile` starts as `null`; `permissions` is computed from the profile; `availableApps` leaves out
+  the current app (guestlist did this by hand); `getRole` is kept as an alias of `role`; `logout` calls `onLogout`
+  instead of importing the app's general store.
+- Router guard: the app's route checks (guestlist's partners/users permissions) go into `checkAccess`.
+- `getQuery` and `clone` are not ported, vue3-nice-elements already provides them.
+- Domain lists in `common.service.js` (permissions, modules, statuses, routes) stay in the apps.
 
 | Module                                                                                                                           | Based on                          |
 | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |

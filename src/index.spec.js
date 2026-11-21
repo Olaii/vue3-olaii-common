@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createApp, defineComponent, h } from "vue";
+import { defineComponent, h } from "vue";
 import { mount } from "@vue/test-utils";
-import { createOlaiiCommon, getOlaiiOptions, useOlaiiOptions } from "./index";
+import { createGettext } from "vue3-gettext";
+import { createOlaiiCommon, getOlaiiOptions, setLanguage, useOlaiiOptions } from "./index";
+import { cookies } from "./test/setup";
+import { install } from "./test/helpers";
 
 const options = {
   appId: "guestlist",
@@ -15,12 +18,14 @@ describe("createOlaiiCommon", () => {
   });
 
   it("normalizes URLs and applies defaults", () => {
-    createApp({}).use(createOlaiiCommon(options));
-    expect(getOlaiiOptions()).toEqual({
-      ...options,
+    install(options);
+    expect(getOlaiiOptions()).toMatchObject({
       apiURL: "https://guestlist-api.dev.olaii.com/",
+      authURL: "https://auth.dev.olaii.com/",
       production: false,
-      debug: false,
+      baseURL: "/",
+      defaultLanguage: "sl",
+      languageCookieKey: "olaii_guestlist_language",
     });
   });
 
@@ -35,5 +40,16 @@ describe("createOlaiiCommon", () => {
     mount(Child, { global: { plugins: [createOlaiiCommon({ ...options, appId: "pass" })] } });
     expect(injected.appId).toBe("pass");
     expect(Object.isFrozen(injected)).toBe(true);
+  });
+
+  it("restores and saves the language in the app's cookie", () => {
+    const gettext = createGettext({ availableLanguages: { en: "English", sl: "Slovenščina" } });
+    cookies.set("vouchers_language", "en");
+    install({ gettext, production: true, languageCookieKey: "vouchers_language" });
+    expect(gettext.current).toBe("en");
+
+    setLanguage("sl");
+    expect(gettext.current).toBe("sl");
+    expect(cookies.get("vouchers_language")).toBe("sl");
   });
 });

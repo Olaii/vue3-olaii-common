@@ -1,0 +1,22 @@
+// Shared helper classes of the Olaii admin apps (from their _common.scss)
+
+// Card container: <div class="box"> with an optional <h1> and .actions row
+.box {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--border-color);
+  padding: 2rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+
+  h1 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+}

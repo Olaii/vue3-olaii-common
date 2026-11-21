@@ -1,0 +1,8 @@
+// Everything the apps share: import once at the top of the app's main.scss
+//   @import "vue3-olaii-common/styles/index.scss";
+// Sass moves the plain-CSS font @import to the top of the output, where CSS requires it.
+@use "./variables";
+@use "./base";
+@use "./grid";
+@use "./common";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");

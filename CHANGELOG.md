@@ -42,6 +42,8 @@ All notable changes to this project are documented here. Versions follow
   text helpers, `clickable`), and `.view-wrapper` in `styles/common.scss`.
 - The grid is generated with Sass instead of the copied Bootstrap CSS (same classes and values). The
   library has no Bootstrap code left.
+- `copyToClipboard(text, { message })`: copies with the Clipboard API, falls back to the copy command
+  on pages without it, and shows a toast (or an error).
 - `notifyToast(text, type, options)` for toasts. Notifications and toasts (including `notifySuccess`,
   `notifyError`, `ErrorService.showError` and the logout toast) now use vue3-nice-elements' `notify()`
   instead of the deprecated `$nice.notification()` / `$nice.toast()`.

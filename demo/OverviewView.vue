@@ -54,12 +54,42 @@
             text="Show"
             @click="notifyToast('Link copied', 'success')"
           />
+          <NiceButton
+            v-else-if="item.example == 'copyToClipboard'"
+            plain
+            text="Copy"
+            @click="copyToClipboard('vue3-olaii-common')"
+          />
           <code v-else-if="examples[item.example]">{{ examples[item.example] }}</code>
         </div>
       </div>
     </section>
 
     <p v-if="!filteredGroups.length" class="empty">Nothing matches "{{ search }}".</p>
+
+    <!-- Icons -->
+    <NiceWrapper title="Icons">
+      <div class="icons-grid">
+        <button
+          type="button"
+          class="btn btn-default btn-plain icon-grid"
+          v-for="icon in icons"
+          :key="icon"
+          @click="copyToClipboard(icon)"
+        >
+          <NiceIcon :icon="icon"></NiceIcon>
+          <span>{{ icon }}</span>
+        </button>
+      </div>
+    </NiceWrapper>
+
+    <template #footer>
+      <NiceButton
+        icon="icon-message-square"
+        text="Test toast"
+        @click="notifyToast('Test', 'primary')"
+      />
+    </template>
   </NiceView>
 </template>
 
@@ -67,6 +97,7 @@
 import { computed, ref } from "vue";
 import * as library from "@/index";
 import {
+  copyToClipboard,
   formatCurrency,
   formatDate,
   formatDateWithTime,
@@ -91,6 +122,8 @@ const examples = {
   dateTime: formatDateWithTime(now, true, true),
 };
 
+const icons = Array.from(document.getElementsByTagName("symbol")).map((s) => s.id);
+
 const filteredGroups = computed(() => {
   const text = search.value.trim().toLowerCase();
   if (!text) return groups;
@@ -106,6 +139,18 @@ const filteredGroups = computed(() => {
 </script>
 
 <style scoped lang="scss">
+.icons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1rem));
+  gap: 1rem;
+
+  .icon-grid {
+    flex-direction: column;
+    gap: 5px;
+    height: auto;
+  }
+}
+
 .intro {
   margin: 0 0 1rem;
   max-width: 720px;

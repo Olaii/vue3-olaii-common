@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { formatCurrency, formatDate, formatDateWithTime } from "./format";
 import {
   arrayToMap,
+  copyToClipboard,
   downloadFile,
   notifyError,
   notifySuccess,
@@ -76,5 +77,48 @@ describe("common", () => {
     downloadFile("a,b", "export.csv");
     expect(click).toHaveBeenCalledOnce();
     expect(URL.createObjectURL.mock.calls[0][0]).toBeInstanceOf(Blob);
+  });
+});
+
+describe("copyToClipboard", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    delete navigator.clipboard;
+    delete document.execCommand;
+  });
+
+  it("copies with the Clipboard API and shows a toast", async () => {
+    install();
+    const writeText = vi.fn(async () => {});
+    Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
+
+    await expect(copyToClipboard("ABC-123")).resolves.toBe(true);
+    expect(writeText).toHaveBeenCalledWith("ABC-123");
+    expect(notifications[0]).toMatchObject({
+      message: "Copied to clipboard",
+      type: "success",
+      variant: "toast",
+    });
+  });
+
+  it("falls back to the copy command without the Clipboard API", async () => {
+    install();
+    document.execCommand = vi.fn(() => true);
+
+    await expect(copyToClipboard("link", { message: "Link copied" })).resolves.toBe(true);
+    expect(document.execCommand).toHaveBeenCalledWith("copy");
+    expect(notifications[0].message).toBe("Link copied");
+    expect(document.querySelector("textarea")).toBeNull();
+  });
+
+  it("shows an error when copying fails, or nothing with message: false", async () => {
+    install();
+    document.execCommand = vi.fn(() => false);
+
+    await expect(copyToClipboard("x")).resolves.toBe(false);
+    expect(notifications[0]).toMatchObject({ message: "Copy to clipboard failed", type: "danger" });
+
+    await expect(copyToClipboard("x", { message: false })).resolves.toBe(false);
+    expect(notifications).toHaveLength(1);
   });
 });

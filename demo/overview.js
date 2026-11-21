@@ -278,6 +278,13 @@ export const groups = [
         example: "notifyToast",
       },
       {
+        name: "copyToClipboard",
+        file: "src/utils/common.js",
+        description:
+          "Copies text and shows a toast; also works where the Clipboard API isn't available.",
+        example: "copyToClipboard",
+      },
+      {
         name: "downloadBlob",
         file: "src/utils/common.js",
         description: "Saves a Blob as a file.",

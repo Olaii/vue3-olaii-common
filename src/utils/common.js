@@ -47,6 +47,51 @@ export function notifyToast(text, type, options) {
   return notify.toast(text, type, options);
 }
 
+/**
+ * Copies text to the clipboard and shows a toast ("Copied to clipboard") or an error notification.
+ *
+ * @param {string} text
+ * @param {object} [options]
+ * @param {string|false} [options.message] Toast text on success; false copies without any message
+ * @returns {Promise<boolean>} Whether the text was copied
+ */
+export async function copyToClipboard(text, { message } = {}) {
+  const copied = await writeToClipboard(String(text ?? ""));
+  if (message === false) return copied;
+
+  if (copied) notifyToast(message || $gettext("Copied to clipboard"), "success");
+  else notifyError($gettext("Copy to clipboard failed"));
+  return copied;
+}
+
+// The Clipboard API needs a secure page (https or localhost). Elsewhere, e.g. the app opened over plain http on the
+// local network, fall back to selecting the text in a hidden textarea and the older "copy" command.
+async function writeToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // Denied (no permission or the page isn't focused): try the fallback
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    return document.execCommand("copy");
+  } catch {
+    return false;
+  } finally {
+    textarea.remove();
+  }
+}
+
 /** Saves a Blob (e.g. from RequestService.getBlob) as a file */
 export function downloadBlob(blob, fileName) {
   const blobUrl = URL.createObjectURL(blob);

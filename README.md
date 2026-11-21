@@ -66,7 +66,7 @@ Peer dependencies the app must install: `vue`, `pinia`, `vue-router`, `vue3-gett
 - **Views:** `OlaiiLoadingView`, `OlaiiErrorView`, `OlaiiNotFoundView`, `OlaiiNoOrganizationsView`
 - **i18n:** `setLanguage`, `getSavedLanguage`
 - **Utils:** `formatCurrency`, `formatDate`, `formatDateWithTime`, `yesNo`, `searchYesNo`,
-  `arrayToMap`, `notifySuccess`, `notifyError`, `notifyToast`, `downloadBlob`, `downloadFile`, `isLocal`
+  `arrayToMap`, `notifySuccess`, `notifyError`, `notifyToast`, `copyToClipboard`, `downloadBlob`, `downloadFile`, `isLocal`
 - **Sentry** (`vue3-olaii-common/sentry`): `initSentry(app, router, { dsn })`
 
 ### Layout, organization and event
